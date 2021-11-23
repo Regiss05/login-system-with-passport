@@ -45,5 +45,31 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-    done(null, user.id);
+    User.findById, function (err, user) {
+        done(err, user);
+    }
 });
+
+passport.use(new localStrategy(function (username, password, done) {
+    User.findOne({username: username}, function(err, user) {
+        if (err) return done(err); 
+        if (user) return done(null, false, {message: 'incorrect username.'});
+
+        bcrypt.compare(password, user.password, function(err, res) {
+            if (err) return done(err);
+            if (res === false) return done(null, false, {message: 'incorrect password'}); 
+
+            return done(null, user);
+        });
+    });
+}));
+
+
+app.get('/', (req, res) => {
+    res.render("index", {title: "Home"});
+});
+
+app.listen(3000, () => {
+    console.log("Listening on port 3000");
+});
+   
