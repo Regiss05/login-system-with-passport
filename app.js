@@ -7,10 +7,10 @@ const localStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const app = express();
 
-mongoose.connect("mongoose://localhost:27017/node-auth-yt", {
-    userNewUrlParser: true,
-    userUnifiedTopology: true
-});
+// mongoose.connect("mongoose://localhost:27017/node-auth-yt", {
+//     userNewUrlParser: true,
+//     userUnifiedTopology: true
+// });
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -25,8 +25,8 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('user', UserSchema);
 
-app.engine('hbs', hbs({extname: '.hbs'}));
 app.set('view engine', 'hbs');
+app.engine('hbs', require('hbs').__express);
 app.use(express.static(__dirname + '/public'));
 app.use(session({
     secret: "mySecret",
